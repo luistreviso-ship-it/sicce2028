@@ -24,6 +24,7 @@ import {
   hasAltaPermission,
   hasBajaPermission,
   hasModificacionPermission,
+  isBootstrappedAdminEmail,
   removeCandidatureDocument,
   reviewCandidature,
   uploadCandidatureDocument,
@@ -145,7 +146,7 @@ export const ReportsAndDocsView: React.FC<ReportsAndDocsViewProps> = ({
     setReviewError(null);
     setConfirmDeleteId(null);
     setLoadingDocs(true);
-    const isBootAdmin = currentUser.email.toLowerCase() === 'fcinmobiliariapy@gmail.com';
+    const isBootAdmin = isBootstrappedAdminEmail(currentUser.email);
     fetchCandidatureDocuments(selected.id, currentUser.uid, isBootAdmin)
       .then(setDocs)
       .finally(() => setLoadingDocs(false));

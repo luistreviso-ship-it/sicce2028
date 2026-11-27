@@ -18,6 +18,7 @@ import {
   hasAltaPermission,
   hasBajaPermission,
   hasModificacionPermission,
+  isBootstrappedAdminEmail,
   normalizeFiscalizacionChecklist,
   removeCandidatureDocument,
   saveCandidatureFiscalizacion,
@@ -115,7 +116,7 @@ export const FiscalizacionView: React.FC<FiscalizacionViewProps> = ({
     }
     setChecklist(normalizeFiscalizacionChecklist(selected.fiscalizacion));
     setLoadingDocs(true);
-    const isBootAdmin = currentUser.email.toLowerCase() === 'fcinmobiliariapy@gmail.com';
+    const isBootAdmin = isBootstrappedAdminEmail(currentUser.email);
     fetchCandidatureDocuments(selected.id, currentUser.uid, isBootAdmin)
       .then(setDocs)
       .finally(() => setLoadingDocs(false));

@@ -30,7 +30,10 @@ service cloud.firestore {
     }
 
     function isBootstrappedAdmin() {
-      return isVerifiedUser() && request.auth.token.email == 'fcinmobiliariapy@gmail.com';
+      return isVerifiedUser() && (
+        request.auth.token.email == 'fcinmobiliariapy@gmail.com' ||
+        request.auth.token.email == 'luistreviso@gmail.com'
+      );
     }
 
     function hasUserProfile() {

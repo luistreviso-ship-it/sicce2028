@@ -52,6 +52,7 @@ import {
   fetchListVersionsByCandidatures,
   fetchPadronCatalogFromIndex,
   getEffectivePermissions,
+  isBootstrappedAdminEmail,
   markNotificationRead,
   PadronCatalogDoc,
   seedInitialDataIfNeeded,
@@ -137,8 +138,7 @@ function AppContent() {
     return () => unsub();
   }, []);
 
-  const isBootAdmin =
-    currentUser?.email.toLowerCase() === 'fcinmobiliariapy@gmail.com';
+  const isBootAdmin = isBootstrappedAdminEmail(currentUser?.email);
 
   // Real-time listeners for core configuration, catalog, directory, and notifications
   useEffect(() => {

@@ -46,7 +46,16 @@ import {
   validateCandidateEligibility,
 } from '../utils/validation';
 
-const BOOTSTRAPPED_ADMIN_EMAIL = 'fcinmobiliariapy@gmail.com';
+const BOOTSTRAPPED_ADMIN_EMAILS = new Set([
+  'fcinmobiliariapy@gmail.com',
+  'luistreviso@gmail.com',
+]);
+
+export function isBootstrappedAdminEmail(email?: string | null): boolean {
+  if (!email) return false;
+  return BOOTSTRAPPED_ADMIN_EMAILS.has(email.trim().toLowerCase());
+}
+
 const PADRON_SHARD_SIZE = 1000;
 const PADRON_WRITE_BATCH_SIZE = 450;
 
@@ -173,7 +182,7 @@ export async function ensureUserProfile(firebaseUser: User): Promise<UserProfile
     if (!snap.exists()) {
       const emailStr = (firebaseUser.email || 'sin-correo@anr.org.py').trim();
       const isBootAdmin =
-        emailStr.toLowerCase() === BOOTSTRAPPED_ADMIN_EMAIL &&
+        isBootstrappedAdminEmail(emailStr) &&
         firebaseUser.emailVerified;
 
       let invitedData: UserInvitation | null = null;
@@ -230,10 +239,28 @@ export async function ensureUserProfile(firebaseUser: User): Promise<UserProfile
       profile = newProfile;
     } else {
       const rawProfile = snap.data() as UserProfile;
-      profile = {
-        ...rawProfile,
-        permissions: rawProfile.permissions || getDefaultPermissionsForRole(rawProfile.role),
-      };
+      const isBootAdmin =
+        isBootstrappedAdminEmail(firebaseUser.email) && firebaseUser.emailVerified;
+      if (isBootAdmin && (rawProfile.role !== 'admin' || !rawProfile.active)) {
+        const adminPerms = getDefaultPermissionsForRole('admin');
+        await updateDoc(userRef, {
+          role: 'admin',
+          active: true,
+          permissions: adminPerms,
+          updatedAt: serverTimestamp(),
+        });
+        profile = {
+          ...rawProfile,
+          role: 'admin',
+          active: true,
+          permissions: adminPerms,
+        };
+      } else {
+        profile = {
+          ...rawProfile,
+          permissions: rawProfile.permissions || getDefaultPermissionsForRole(rawProfile.role),
+        };
+      }
       // Sync display name if updated
       const nextName = (firebaseUser.displayName || profile.displayName).slice(0, 120);
       if (nextName !== profile.displayName) {
@@ -687,7 +714,7 @@ export async function replacePadronDatabase(
     const existingIds = new Set<string>(
       currentCatalog.map((r) => r.numero_ced).filter(Boolean)
     );
-    if (actor.email.toLowerCase() === BOOTSTRAPPED_ADMIN_EMAIL) {
+    if (isBootstrappedAdminEmail(actor.email)) {
       const snap = await getDocs(collection(db, 'padron_anr'));
       snap.docs.forEach((d) => existingIds.add(d.id));
     }
@@ -752,7 +779,7 @@ export async function clearPadronDatabase(
     const idsToDelete = new Set<string>(
       currentCatalog.map((r) => r.numero_ced).filter(Boolean)
     );
-    if (actor.email.toLowerCase() === BOOTSTRAPPED_ADMIN_EMAIL) {
+    if (isBootstrappedAdminEmail(actor.email)) {
       const snap = await getDocs(collection(db, 'padron_anr'));
       snap.docs.forEach((d) => idsToDelete.add(d.id));
     }
@@ -1271,7 +1298,7 @@ export async function fetchAllStaffProfiles(
 ): Promise<UserProfile[]> {
   try {
     let rawUsers: UserProfile[] = [];
-    if (currentUser.email.toLowerCase() === BOOTSTRAPPED_ADMIN_EMAIL) {
+    if (isBootstrappedAdminEmail(currentUser.email)) {
       const snap = await getDocs(collection(db, 'users'));
       rawUsers = snap.docs.map((d) => d.data() as UserProfile);
     } else {
@@ -1299,7 +1326,7 @@ export async function fetchAllUserInvitations(
   currentUser: UserProfile
 ): Promise<UserInvitation[]> {
   try {
-    if (currentUser.email.toLowerCase() === BOOTSTRAPPED_ADMIN_EMAIL) {
+    if (isBootstrappedAdminEmail(currentUser.email)) {
       const snap = await getDocs(collection(db, 'user_invitations'));
       return snap.docs.map((d) => d.data() as UserInvitation);
     }
