@@ -1,0 +1,315 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated user account, RBAC role, and granular ABM permissions (alta, baja, modificacion).",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 160 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "role": { "type": "string", "enum": ["admin", "operador", "revisor"] },
+        "active": { "type": "boolean" },
+        "permissions": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "displayName", "role", "active", "createdAt", "updatedAt"]
+    },
+    "UserInvitation": {
+      "title": "UserInvitation",
+      "description": "Pre-authorized user creation record with role and granular ABM permissions (alta, baja, modificacion).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 160 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "role": { "type": "string", "enum": ["admin", "operador", "revisor"] },
+        "permissions": { "type": "object" },
+        "active": { "type": "boolean" },
+        "createdByUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "email", "displayName", "role", "permissions", "active", "createdByUid", "createdAt", "updatedAt"]
+    },
+    "SeatParameters": {
+      "title": "SeatParameters",
+      "description": "Configurable mandatory seat counts (escaños) and registration deadlines across all ANR 2027 modules.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "deadlineNacional": { "type": "string", "maxLength": 32 },
+        "deadlineAnr": { "type": "string", "maxLength": 32 },
+        "deadlineSeccional": { "type": "string", "maxLength": 32 },
+        "senadoresTitulares": { "type": "number" },
+        "senadoresSuplentes": { "type": "number" },
+        "juntaGobNacionalTitulares": { "type": "number" },
+        "juntaGobNacionalSuplentes": { "type": "number" },
+        "diputadosByDept": { "type": "object" },
+        "juntaDeptByDept": { "type": "object" },
+        "juntaGobRegionalByDept": { "type": "object" },
+        "seccionalesConfig": { "type": "object" },
+        "updatedByUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "deadlineNacional",
+        "deadlineAnr",
+        "deadlineSeccional",
+        "senadoresTitulares",
+        "senadoresSuplentes",
+        "juntaGobNacionalTitulares",
+        "juntaGobNacionalSuplentes",
+        "diputadosByDept",
+        "juntaDeptByDept",
+        "juntaGobRegionalByDept",
+        "seccionalesConfig",
+        "updatedByUid",
+        "updatedAt"
+      ]
+    },
+    "PadronRecord": {
+      "title": "PadronRecord",
+      "description": "Official PadronANR electoral database record indexed by numero_ced.",
+      "type": "object",
+      "properties": {
+        "cod_dpto": { "type": "string", "minLength": 1, "maxLength": 10 },
+        "desc_dep": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "cod_dist": { "type": "string", "minLength": 1, "maxLength": 15 },
+        "desc_dis": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "codigo_sec": { "type": "string", "minLength": 1, "maxLength": 20 },
+        "numero_ced": { "type": "string", "minLength": 1, "maxLength": 20, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "apellido": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "nombre": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "fecha_naci": { "type": "string", "maxLength": 20 },
+        "fecha_afil": { "type": "string", "maxLength": 20 },
+        "createdByUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "cod_dpto",
+        "desc_dep",
+        "cod_dist",
+        "desc_dis",
+        "codigo_sec",
+        "numero_ced",
+        "apellido",
+        "nombre",
+        "fecha_naci",
+        "fecha_afil",
+        "createdByUid",
+        "createdAt"
+      ]
+    },
+    "PadronCatalog": {
+      "title": "PadronCatalog",
+      "description": "Sharded searchable catalog of PadronANR entries (index_v1 + shard_XXX) for fast client autocomplete beyond 2,500 records.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "records": { "type": "array" },
+        "shardIds": { "type": "array" },
+        "totalCount": { "type": "number" },
+        "updatedByUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "records", "shardIds", "totalCount", "updatedByUid", "updatedAt"]
+    },
+    "Candidature": {
+      "title": "Candidature",
+      "description": "Electoral candidature submission (complete or incomplete with OBSERVADA status) with grouped sublists.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "moduleType": { "type": "string", "enum": ["NACIONAL_PRESIDENCIA", "NACIONAL_SENADORES", "NACIONAL_DIPUTADOS", "NACIONAL_GOBERNACION", "ANR_NACIONAL_REGIONAL", "SECCIONAL_ANR"] },
+        "title": { "type": "string", "minLength": 3, "maxLength": 180 },
+        "movementName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "listNumber": { "type": "string", "minLength": 1, "maxLength": 20 },
+        "departamento": { "type": "string", "maxLength": 60 },
+        "seccional": { "type": "string", "maxLength": 80 },
+        "sublists": { "type": "array" },
+        "totalCandidates": { "type": "number" },
+        "requiredCandidates": { "type": "number" },
+        "isComplete": { "type": "boolean" },
+        "reviewStatus": { "type": "string", "enum": ["PENDIENTE", "APROBADA", "OBSERVADA"] },
+        "reviewComment": { "type": "string", "maxLength": 500 },
+        "reviewedByUid": { "type": "string", "maxLength": 128 },
+        "versionNumber": { "type": "number" },
+        "createdByUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdByName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "fiscalizacion": { "type": "object" },
+        "authorizedUids": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "moduleType",
+        "title",
+        "movementName",
+        "listNumber",
+        "departamento",
+        "seccional",
+        "sublists",
+        "totalCandidates",
+        "requiredCandidates",
+        "isComplete",
+        "reviewStatus",
+        "reviewComment",
+        "reviewedByUid",
+        "versionNumber",
+        "createdByUid",
+        "createdByName",
+        "authorizedUids",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "CandidatureDocument": {
+      "title": "CandidatureDocument",
+      "description": "Digital supporting document attached to a candidature (endorsement letter, ID copy, affiliation certificate).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "candidatureId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "docType": {
+          "type": "string",
+          "enum": [
+            "PAGO_APORTE_PARTIDARIO",
+            "CEDULA_IDENTIDAD",
+            "FOTO_CARNET_3X4",
+            "ACEPTACION_TRIPLICADO",
+            "AUTENTICACION_ACEPTACION",
+            "CARTA_RESPALDO",
+            "CERTIFICADO_AFILIACION",
+            "ACTA_COMPROMISO",
+            "OTRO"
+          ]
+        },
+        "fileName": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "mimeType": { "type": "string", "minLength": 3, "maxLength": 80 },
+        "sizeBytes": { "type": "number" },
+        "dataUrl": { "type": "string", "minLength": 10, "maxLength": 700000 },
+        "uploadedByUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "uploadedByName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "authorizedUids": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "candidatureId", "docType", "fileName", "mimeType", "sizeBytes", "dataUrl", "uploadedByUid", "uploadedByName", "authorizedUids", "createdAt"]
+    },
+    "ListVersion": {
+      "title": "ListVersion",
+      "description": "Immutable historical snapshot of a candidature list version.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "candidatureId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "moduleType": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "versionNumber": { "type": "number" },
+        "changeNote": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "snapshotSublists": { "type": "array" },
+        "totalCandidates": { "type": "number" },
+        "createdByUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdByName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "authorizedUids": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "candidatureId", "moduleType", "title", "versionNumber", "changeNote", "snapshotSublists", "totalCandidates", "createdByUid", "createdByName", "authorizedUids", "createdAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable audit trail recording who performed each electoral action and when.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "action": { "type": "string", "minLength": 2, "maxLength": 64 },
+        "entityType": { "type": "string", "minLength": 2, "maxLength": 64 },
+        "entityId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "summary": { "type": "string", "minLength": 2, "maxLength": 400 },
+        "actorUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "actorName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "actorRole": { "type": "string", "enum": ["admin", "operador", "revisor"] },
+        "authorizedUids": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "action", "entityType", "entityId", "summary", "actorUid", "actorName", "actorRole", "authorizedUids", "createdAt"]
+    },
+    "NotificationItem": {
+      "title": "NotificationItem",
+      "description": "In-system confirmation and deadline notifications.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "targetUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "message": { "type": "string", "minLength": 2, "maxLength": 400 },
+        "category": { "type": "string", "enum": ["CONFIRMACION", "REVISION", "VENCIMIENTO", "SISTEMA"] },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "targetUid", "title", "message", "category", "read", "createdAt"]
+    },
+    "SystemDirectory": {
+      "title": "SystemDirectory",
+      "description": "Bounded directory of authorized staff UIDs, invitation IDs, and candidature IDs for fast staff synchronization.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "staffUids": { "type": "array" },
+        "candidatureIds": { "type": "array" },
+        "invitationIds": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "staffUids", "candidatureIds", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profiles, RBAC roles, and ABM permissions."
+    },
+    "/user_invitations/{inviteId}": {
+      "schema": { "$ref": "#/entities/UserInvitation" },
+      "description": "Pre-authorized user accounts created by administrators."
+    },
+    "/seat_parameters/{paramId}": {
+      "schema": { "$ref": "#/entities/SeatParameters" },
+      "description": "Seat count parameters (escaños) and registration deadlines."
+    },
+    "/padron_anr/{cedulaId}": {
+      "schema": { "$ref": "#/entities/PadronRecord" },
+      "description": "PadronANR electoral roll records keyed by numero_ced."
+    },
+    "/padron_catalog/{catalogId}": {
+      "schema": { "$ref": "#/entities/PadronCatalog" },
+      "description": "Compact searchable catalog of PadronANR records."
+    },
+    "/candidatures/{candidatureId}": {
+      "schema": { "$ref": "#/entities/Candidature" },
+      "description": "Official complete candidatures with grouped sublists."
+    },
+    "/candidatures/{candidatureId}/documents/{docId}": {
+      "schema": { "$ref": "#/entities/CandidatureDocument" },
+      "description": "Supporting documents attached to a candidature."
+    },
+    "/list_versions/{versionId}": {
+      "schema": { "$ref": "#/entities/ListVersion" },
+      "description": "Historical snapshots of candidature list versions."
+    },
+    "/audit_logs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Immutable audit trail of system actions."
+    },
+    "/notifications/{notifId}": {
+      "schema": { "$ref": "#/entities/NotificationItem" },
+      "description": "System notifications for confirmations and deadlines."
+    },
+    "/system_directory/{dirId}": {
+      "schema": { "$ref": "#/entities/SystemDirectory" },
+      "description": "Directory of staff UIDs and candidature IDs."
+    }
+  }
+}

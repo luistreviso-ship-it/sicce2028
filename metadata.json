@@ -1,0 +1,6 @@
+{
+  "name": "Sistema Electoral ANR 2027",
+  "description": "Plataforma oficial de carga, validación de padrón, control de escaños, auditoría y exportación de candidaturas para las Elecciones ANR 2027 - Partido Colorado.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

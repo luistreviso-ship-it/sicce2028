@@ -1,0 +1,662 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net (Default-Deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Core Primitives
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isBootstrappedAdmin() {
+      return isVerifiedUser() && request.auth.token.email == 'fcinmobiliariapy@gmail.com';
+    }
+
+    function hasUserProfile() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isBootstrappedAdmin() || (isVerifiedUser() && hasUserProfile() && userDoc().active == true && userDoc().role == 'admin');
+    }
+
+    function isRevisor() {
+      return isVerifiedUser() && hasUserProfile() && userDoc().active == true && userDoc().role == 'revisor';
+    }
+
+    function isOperador() {
+      return isVerifiedUser() && hasUserProfile() && userDoc().active == true && userDoc().role == 'operador';
+    }
+
+    function isStaff() {
+      return isAdmin() || isRevisor() || isOperador();
+    }
+
+    function canAlta() {
+      return isAdmin() || (
+        (isOperador() || isRevisor())
+        && (
+          (!('permissions' in userDoc()) && isOperador())
+          || ('permissions' in userDoc() && userDoc().permissions.alta == true)
+        )
+      );
+    }
+
+    function canModificacion() {
+      return isAdmin() || (
+        (isOperador() || isRevisor())
+        && (
+          !('permissions' in userDoc())
+          || userDoc().permissions.modificacion == true
+        )
+      );
+    }
+
+    function canBaja() {
+      return isAdmin() || (
+        (isOperador() || isRevisor())
+        && ('permissions' in userDoc() && userDoc().permissions.baja == true)
+      );
+    }
+
+    function isOwner(uid) {
+      return isVerifiedUser() && request.auth.uid == uid;
+    }
+
+    function myInviteId() {
+      return request.auth.token.email.lower().replace('[^a-z0-9_-]', '_');
+    }
+
+    function hasMatchingInvitation() {
+      return isVerifiedUser()
+        && request.auth.token.email is string
+        && exists(/databases/$(database)/documents/user_invitations/$(myInviteId()))
+        && get(/databases/$(database)/documents/user_invitations/$(myInviteId())).data.email.lower() == request.auth.token.email.lower();
+    }
+
+    function matchingInvitation() {
+      return get(/databases/$(database)/documents/user_invitations/$(myInviteId())).data;
+    }
+
+    function isValidPermissionsMap(perms) {
+      return perms is map
+        && perms.keys().hasAll(['alta', 'baja', 'modificacion'])
+        && perms.keys().hasOnly(['alta', 'baja', 'modificacion'])
+        && perms.alta is bool
+        && perms.baja is bool
+        && perms.modificacion is bool;
+    }
+
+    // Entity Validation Blueprints
+    function isValidUser(data, userId) {
+      return data.keys().hasAll(['uid', 'email', 'displayName', 'role', 'active', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['uid', 'email', 'displayName', 'role', 'active', 'permissions', 'createdAt', 'updatedAt'])
+        && data.uid is string && data.uid == userId && isValidId(data.uid)
+        && data.email is string && data.email.size() >= 3 && data.email.size() <= 160
+        && data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 120
+        && data.role in ['admin', 'operador', 'revisor']
+        && data.active is bool
+        && (!('permissions' in data) || isValidPermissionsMap(data.permissions))
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidUserInvitation(data, inviteId) {
+      return data.keys().hasAll(['id', 'email', 'displayName', 'role', 'permissions', 'active', 'createdByUid', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'email', 'displayName', 'role', 'permissions', 'active', 'createdByUid', 'createdAt', 'updatedAt'])
+        && data.id is string && data.id == inviteId && isValidId(data.id)
+        && data.email is string && data.email.size() >= 3 && data.email.size() <= 160
+        && data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 120
+        && data.role in ['admin', 'operador', 'revisor']
+        && isValidPermissionsMap(data.permissions)
+        && data.active is bool
+        && data.createdByUid is string && isValidId(data.createdByUid)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidSeatParameters(data, paramId) {
+      return data.keys().hasAll([
+          'id', 'deadlineNacional', 'deadlineAnr', 'deadlineSeccional',
+          'senadoresTitulares', 'senadoresSuplentes',
+          'juntaGobNacionalTitulares', 'juntaGobNacionalSuplentes',
+          'diputadosByDept', 'juntaDeptByDept', 'juntaGobRegionalByDept',
+          'seccionalesConfig', 'updatedByUid', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'deadlineNacional', 'deadlineAnr', 'deadlineSeccional',
+          'senadoresTitulares', 'senadoresSuplentes',
+          'juntaGobNacionalTitulares', 'juntaGobNacionalSuplentes',
+          'diputadosByDept', 'juntaDeptByDept', 'juntaGobRegionalByDept',
+          'seccionalesConfig', 'updatedByUid', 'updatedAt'
+        ])
+        && data.id is string && data.id == paramId && data.id.size() <= 64
+        && data.deadlineNacional is string && data.deadlineNacional.size() >= 8 && data.deadlineNacional.size() <= 32
+        && data.deadlineAnr is string && data.deadlineAnr.size() >= 8 && data.deadlineAnr.size() <= 32
+        && data.deadlineSeccional is string && data.deadlineSeccional.size() >= 8 && data.deadlineSeccional.size() <= 32
+        && data.senadoresTitulares is int && data.senadoresTitulares >= 1 && data.senadoresTitulares <= 200
+        && data.senadoresSuplentes is int && data.senadoresSuplentes >= 1 && data.senadoresSuplentes <= 200
+        && data.juntaGobNacionalTitulares is int && data.juntaGobNacionalTitulares >= 1 && data.juntaGobNacionalTitulares <= 200
+        && data.juntaGobNacionalSuplentes is int && data.juntaGobNacionalSuplentes >= 1 && data.juntaGobNacionalSuplentes <= 200
+        && data.diputadosByDept is map && data.diputadosByDept.size() <= 25
+        && data.juntaDeptByDept is map && data.juntaDeptByDept.size() <= 25
+        && data.juntaGobRegionalByDept is map && data.juntaGobRegionalByDept.size() <= 25
+        && data.seccionalesConfig is map && data.seccionalesConfig.size() <= 600
+        && data.updatedByUid is string && data.updatedByUid == request.auth.uid && isValidId(data.updatedByUid)
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidPadronRecord(data, cedulaId) {
+      return data.keys().hasAll([
+          'cod_dpto', 'desc_dep', 'cod_dist', 'desc_dis', 'codigo_sec',
+          'numero_ced', 'apellido', 'nombre', 'fecha_naci', 'fecha_afil',
+          'createdByUid', 'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'cod_dpto', 'desc_dep', 'cod_dist', 'desc_dis', 'codigo_sec',
+          'numero_ced', 'apellido', 'nombre', 'fecha_naci', 'fecha_afil',
+          'createdByUid', 'createdAt'
+        ])
+        && data.cod_dpto is string && data.cod_dpto.size() >= 1 && data.cod_dpto.size() <= 10
+        && data.desc_dep is string && data.desc_dep.size() >= 1 && data.desc_dep.size() <= 60
+        && data.cod_dist is string && data.cod_dist.size() >= 1 && data.cod_dist.size() <= 15
+        && data.desc_dis is string && data.desc_dis.size() >= 1 && data.desc_dis.size() <= 80
+        && data.codigo_sec is string && data.codigo_sec.size() >= 1 && data.codigo_sec.size() <= 20
+        && data.numero_ced is string && data.numero_ced == cedulaId && data.numero_ced.size() >= 1 && data.numero_ced.size() <= 20
+        && data.apellido is string && data.apellido.size() >= 1 && data.apellido.size() <= 100
+        && data.nombre is string && data.nombre.size() >= 1 && data.nombre.size() <= 100
+        && data.fecha_naci is string && data.fecha_naci.size() >= 4 && data.fecha_naci.size() <= 20
+        && data.fecha_afil is string && data.fecha_afil.size() >= 4 && data.fecha_afil.size() <= 20
+        && data.createdByUid is string && isValidId(data.createdByUid)
+        && data.createdAt is timestamp;
+    }
+
+    function isValidPadronCatalog(data, catalogId) {
+      return data.keys().hasAll(['id', 'records', 'shardIds', 'totalCount', 'updatedByUid', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'records', 'shardIds', 'totalCount', 'updatedByUid', 'updatedAt'])
+        && data.id is string && data.id == catalogId && data.id.size() <= 64
+        && data.records is list && data.records.size() <= 1200
+        && (data.records.size() == 0 || data.records[0] is map)
+        && data.shardIds is list && data.shardIds.size() <= 250
+        && (data.shardIds.size() == 0 || data.shardIds[0] is string)
+        && data.totalCount is int && data.totalCount >= 0 && data.totalCount <= 300000
+        && data.updatedByUid is string && data.updatedByUid == request.auth.uid && isValidId(data.updatedByUid)
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidCandidature(data, candidatureId) {
+      return data.keys().hasAll([
+          'id', 'moduleType', 'title', 'movementName', 'listNumber',
+          'departamento', 'seccional', 'sublists', 'totalCandidates',
+          'requiredCandidates', 'isComplete', 'reviewStatus', 'reviewComment',
+          'reviewedByUid', 'versionNumber', 'createdByUid', 'createdByName',
+          'authorizedUids', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'moduleType', 'title', 'movementName', 'listNumber',
+          'departamento', 'seccional', 'sublists', 'totalCandidates',
+          'requiredCandidates', 'isComplete', 'reviewStatus', 'reviewComment',
+          'reviewedByUid', 'versionNumber', 'createdByUid', 'createdByName',
+          'fiscalizacion', 'authorizedUids', 'createdAt', 'updatedAt'
+        ])
+        && data.id is string && data.id == candidatureId && isValidId(data.id)
+        && data.moduleType in [
+          'NACIONAL_PRESIDENCIA', 'NACIONAL_SENADORES', 'NACIONAL_DIPUTADOS',
+          'NACIONAL_GOBERNACION', 'ANR_NACIONAL_REGIONAL', 'SECCIONAL_ANR'
+        ]
+        && data.title is string && data.title.size() >= 3 && data.title.size() <= 180
+        && data.movementName is string && data.movementName.size() >= 2 && data.movementName.size() <= 120
+        && data.listNumber is string && data.listNumber.size() >= 1 && data.listNumber.size() <= 20
+        && data.departamento is string && data.departamento.size() <= 60
+        && data.seccional is string && data.seccional.size() <= 80
+        && data.sublists is list && data.sublists.size() >= 1 && data.sublists.size() <= 50
+        && data.sublists[0] is map
+        && data.totalCandidates is int && data.totalCandidates >= 1 && data.totalCandidates <= 2000
+        && data.requiredCandidates is int && data.requiredCandidates >= 1 && data.requiredCandidates <= 2000
+        && data.isComplete is bool
+        && (
+          (data.isComplete == true && data.totalCandidates == data.requiredCandidates)
+          || (
+            data.isComplete == false
+            && data.totalCandidates < data.requiredCandidates
+            && data.reviewStatus == 'OBSERVADA'
+            && data.reviewComment.size() >= 3
+          )
+        )
+        && data.reviewStatus in ['PENDIENTE', 'APROBADA', 'OBSERVADA']
+        && data.reviewComment is string && data.reviewComment.size() <= 500
+        && data.reviewedByUid is string && data.reviewedByUid.size() <= 128
+        && data.versionNumber is int && data.versionNumber >= 1 && data.versionNumber <= 1000
+        && data.createdByUid is string && isValidId(data.createdByUid)
+        && data.createdByName is string && data.createdByName.size() >= 1 && data.createdByName.size() <= 120
+        && (!('fiscalizacion' in data) || data.fiscalizacion is map)
+        && data.authorizedUids is list && data.authorizedUids.size() >= 1 && data.authorizedUids.size() <= 50
+        && data.authorizedUids[0] is string
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidCandidatureDocument(data, candidatureId, docId) {
+      return data.keys().hasAll([
+          'id', 'candidatureId', 'docType', 'fileName', 'mimeType',
+          'sizeBytes', 'dataUrl', 'uploadedByUid', 'uploadedByName', 'authorizedUids', 'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'candidatureId', 'docType', 'fileName', 'mimeType',
+          'sizeBytes', 'dataUrl', 'uploadedByUid', 'uploadedByName', 'authorizedUids', 'createdAt'
+        ])
+        && data.id is string && data.id == docId && isValidId(data.id)
+        && data.candidatureId is string && data.candidatureId == candidatureId && isValidId(data.candidatureId)
+        && data.docType in [
+          'PAGO_APORTE_PARTIDARIO', 'CEDULA_IDENTIDAD', 'FOTO_CARNET_3X4',
+          'ACEPTACION_TRIPLICADO', 'AUTENTICACION_ACEPTACION',
+          'CARTA_RESPALDO', 'CERTIFICADO_AFILIACION', 'ACTA_COMPROMISO', 'OTRO'
+        ]
+        && data.fileName is string && data.fileName.size() >= 1 && data.fileName.size() <= 160
+        && data.mimeType is string && data.mimeType.size() >= 3 && data.mimeType.size() <= 80
+        && data.sizeBytes is int && data.sizeBytes >= 1 && data.sizeBytes <= 700000
+        && data.dataUrl is string && data.dataUrl.size() >= 10 && data.dataUrl.size() <= 700000
+        && data.uploadedByUid is string && data.uploadedByUid == request.auth.uid && isValidId(data.uploadedByUid)
+        && data.uploadedByName is string && data.uploadedByName.size() >= 1 && data.uploadedByName.size() <= 120
+        && data.authorizedUids is list && data.authorizedUids.size() >= 1 && data.authorizedUids.size() <= 50
+        && data.authorizedUids[0] is string
+        && data.createdAt is timestamp;
+    }
+
+    function isValidListVersion(data, versionId) {
+      return data.keys().hasAll([
+          'id', 'candidatureId', 'moduleType', 'title', 'versionNumber',
+          'changeNote', 'snapshotSublists', 'totalCandidates',
+          'createdByUid', 'createdByName', 'authorizedUids', 'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'candidatureId', 'moduleType', 'title', 'versionNumber',
+          'changeNote', 'snapshotSublists', 'totalCandidates',
+          'createdByUid', 'createdByName', 'authorizedUids', 'createdAt'
+        ])
+        && data.id is string && data.id == versionId && isValidId(data.id)
+        && data.candidatureId is string && isValidId(data.candidatureId)
+        && data.moduleType is string && data.moduleType.size() >= 1 && data.moduleType.size() <= 64
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 180
+        && data.versionNumber is int && data.versionNumber >= 1 && data.versionNumber <= 1000
+        && data.changeNote is string && data.changeNote.size() >= 1 && data.changeNote.size() <= 300
+        && data.snapshotSublists is list && data.snapshotSublists.size() >= 1 && data.snapshotSublists.size() <= 50
+        && data.snapshotSublists[0] is map
+        && data.totalCandidates is int && data.totalCandidates >= 1 && data.totalCandidates <= 2000
+        && data.createdByUid is string && data.createdByUid == request.auth.uid && isValidId(data.createdByUid)
+        && data.createdByName is string && data.createdByName.size() >= 1 && data.createdByName.size() <= 120
+        && data.authorizedUids is list && data.authorizedUids.size() >= 1 && data.authorizedUids.size() <= 50
+        && data.authorizedUids[0] is string
+        && data.createdAt is timestamp;
+    }
+
+    function isValidAuditLog(data, logId) {
+      return data.keys().hasAll([
+          'id', 'action', 'entityType', 'entityId', 'summary',
+          'actorUid', 'actorName', 'actorRole', 'authorizedUids', 'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'action', 'entityType', 'entityId', 'summary',
+          'actorUid', 'actorName', 'actorRole', 'authorizedUids', 'createdAt'
+        ])
+        && data.id is string && data.id == logId && isValidId(data.id)
+        && data.action is string && data.action.size() >= 2 && data.action.size() <= 64
+        && data.entityType is string && data.entityType.size() >= 2 && data.entityType.size() <= 64
+        && data.entityId is string && data.entityId.size() >= 1 && data.entityId.size() <= 128
+        && data.summary is string && data.summary.size() >= 2 && data.summary.size() <= 400
+        && data.actorUid is string && data.actorUid == request.auth.uid && isValidId(data.actorUid)
+        && data.actorName is string && data.actorName.size() >= 1 && data.actorName.size() <= 120
+        && data.actorRole in ['admin', 'operador', 'revisor']
+        && data.authorizedUids is list && data.authorizedUids.size() >= 1 && data.authorizedUids.size() <= 50
+        && data.authorizedUids[0] is string
+        && data.createdAt is timestamp;
+    }
+
+    function isValidNotification(data, notifId) {
+      return data.keys().hasAll(['id', 'targetUid', 'title', 'message', 'category', 'read', 'createdAt'])
+        && data.keys().hasOnly(['id', 'targetUid', 'title', 'message', 'category', 'read', 'createdAt'])
+        && data.id is string && data.id == notifId && isValidId(data.id)
+        && data.targetUid is string && isValidId(data.targetUid)
+        && data.title is string && data.title.size() >= 2 && data.title.size() <= 140
+        && data.message is string && data.message.size() >= 2 && data.message.size() <= 400
+        && data.category in ['CONFIRMACION', 'REVISION', 'VENCIMIENTO', 'SISTEMA']
+        && data.read is bool
+        && data.createdAt is timestamp;
+    }
+
+    function isValidSystemDirectory(data, dirId) {
+      return data.keys().hasAll(['id', 'staffUids', 'candidatureIds', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'staffUids', 'candidatureIds', 'invitationIds', 'updatedAt'])
+        && data.id is string && data.id == dirId && data.id.size() <= 64
+        && data.staffUids is list && data.staffUids.size() <= 50
+        && (data.staffUids.size() == 0 || data.staffUids[0] is string)
+        && data.candidatureIds is list && data.candidatureIds.size() <= 500
+        && (data.candidatureIds.size() == 0 || data.candidatureIds[0] is string)
+        && (!('invitationIds' in data) || (data.invitationIds is list && data.invitationIds.size() <= 200 && (data.invitationIds.size() == 0 || data.invitationIds[0] is string)))
+        && data.updatedAt is timestamp;
+    }
+
+    // 1. Users & Roles (PII isolated to Owner or Admin)
+    match /users/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow list: if isVerifiedUser() && (resource.data.uid == request.auth.uid || isBootstrappedAdmin());
+      allow create: if isValidId(userId)
+        && isOwner(userId)
+        && isValidUser(incoming(), userId)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && (
+          (
+            incoming().active == true
+            && incoming().role == 'operador'
+            && (!('permissions' in incoming()) || (incoming().permissions.alta == true && incoming().permissions.baja == false && incoming().permissions.modificacion == true))
+          )
+          || (incoming().active == true && incoming().role == 'admin' && isBootstrappedAdmin())
+          || (
+            hasMatchingInvitation()
+            && incoming().role == matchingInvitation().role
+            && incoming().active == matchingInvitation().active
+            && (!('permissions' in incoming()) || incoming().permissions == matchingInvitation().permissions)
+          )
+        );
+      allow update: if isValidId(userId)
+        && isValidUser(incoming(), userId)
+        && incoming().uid == existing().uid
+        && incoming().email == existing().email
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          (isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly(['role', 'active', 'displayName', 'permissions', 'updatedAt']))
+          || (isOwner(userId) && incoming().role == existing().role && incoming().active == existing().active && (!('permissions' in incoming()) || incoming().permissions == existing().permissions) && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'updatedAt']))
+        );
+      allow delete: if isValidId(userId) && isAdmin() && userId != request.auth.uid;
+    }
+
+    // 1b. Pre-authorized User Invitations (Created/managed by Admin for Alta/Baja/Modificación)
+    match /user_invitations/{inviteId} {
+      allow get: if isValidId(inviteId) && (isAdmin() || (isVerifiedUser() && request.auth.token.email is string && inviteId == myInviteId()));
+      allow list: if isBootstrappedAdmin();
+      allow create: if isValidId(inviteId)
+        && isAdmin()
+        && isValidUserInvitation(incoming(), inviteId)
+        && incoming().createdByUid == request.auth.uid
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+      allow update: if isValidId(inviteId)
+        && isAdmin()
+        && isValidUserInvitation(incoming(), inviteId)
+        && incoming().id == existing().id
+        && incoming().createdByUid == existing().createdByUid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['email', 'displayName', 'role', 'permissions', 'active', 'updatedAt']);
+      allow delete: if isValidId(inviteId) && isAdmin();
+    }
+
+    // 2. Seat Parameters (Single doc read by all staff, writable only by Admin)
+    match /seat_parameters/{paramId} {
+      allow get: if isValidId(paramId) && isStaff();
+      allow list: if isBootstrappedAdmin();
+      allow create: if isValidId(paramId)
+        && isAdmin()
+        && isValidSeatParameters(incoming(), paramId)
+        && incoming().updatedAt == request.time;
+      allow update: if isValidId(paramId)
+        && isAdmin()
+        && isValidSeatParameters(incoming(), paramId)
+        && incoming().id == existing().id
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly([
+          'deadlineNacional', 'deadlineAnr', 'deadlineSeccional',
+          'senadoresTitulares', 'senadoresSuplentes',
+          'juntaGobNacionalTitulares', 'juntaGobNacionalSuplentes',
+          'diputadosByDept', 'juntaDeptByDept', 'juntaGobRegionalByDept',
+          'seccionalesConfig', 'updatedByUid', 'updatedAt'
+        ]);
+      allow delete: if false;
+    }
+
+    // 3. PadronANR Records (Individual get by staff, managed by Admin)
+    match /padron_anr/{cedulaId} {
+      allow get: if isValidId(cedulaId) && isStaff();
+      allow list: if isBootstrappedAdmin();
+      allow create: if isValidId(cedulaId)
+        && isAdmin()
+        && isValidPadronRecord(incoming(), cedulaId)
+        && incoming().createdByUid == request.auth.uid
+        && incoming().createdAt == request.time;
+      allow update: if isValidId(cedulaId)
+        && isAdmin()
+        && isValidPadronRecord(incoming(), cedulaId)
+        && incoming().createdByUid == request.auth.uid
+        && (incoming().createdAt == request.time || incoming().createdAt == existing().createdAt)
+        && incoming().diff(existing()).affectedKeys().hasOnly([
+          'cod_dpto', 'desc_dep', 'cod_dist', 'desc_dis', 'codigo_sec',
+          'numero_ced', 'apellido', 'nombre', 'fecha_naci', 'fecha_afil',
+          'createdByUid', 'createdAt',
+          'cedula_ident', 'nombres', 'apellidos', 'fecha_nacimiento',
+          'departamento', 'distrito', 'seccional', 'nro_afiliacion',
+          'fecha_afiliacion', 'estado_padron', 'sexo'
+        ]);
+      allow delete: if isValidId(cedulaId) && isAdmin();
+    }
+
+    // 4. Padron Catalog (Sharded autocomplete index: index_v1 manifest + shard_XXX docs)
+    match /padron_catalog/{catalogId} {
+      allow get: if isValidId(catalogId) && isStaff();
+      allow list: if isBootstrappedAdmin();
+      allow create: if isValidId(catalogId)
+        && isAdmin()
+        && isValidPadronCatalog(incoming(), catalogId)
+        && incoming().updatedAt == request.time;
+      allow update: if isValidId(catalogId)
+        && isAdmin()
+        && isValidPadronCatalog(incoming(), catalogId)
+        && incoming().id == existing().id
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['id', 'records', 'shardIds', 'totalCount', 'updatedByUid', 'updatedAt']);
+      allow delete: if isValidId(catalogId) && isAdmin() && catalogId != 'index_v1';
+    }
+
+    // 5. Candidatures (Complete or Incomplete-with-OBSERVADA, Action-based updates & ABM permissions)
+    match /candidatures/{candidatureId} {
+      allow get: if isValidId(candidatureId) && isStaff();
+      allow list: if isVerifiedUser() && (
+        resource.data.createdByUid == request.auth.uid
+        || request.auth.uid in resource.data.authorizedUids
+        || isBootstrappedAdmin()
+      );
+      allow create: if isValidId(candidatureId)
+        && canAlta()
+        && isValidCandidature(incoming(), candidatureId)
+        && incoming().createdByUid == request.auth.uid
+        && incoming().reviewedByUid == ''
+        && (
+          (incoming().isComplete == true && incoming().reviewStatus == 'PENDIENTE' && incoming().reviewComment == '')
+          || (incoming().isComplete == true && incoming().reviewStatus == 'OBSERVADA' && incoming().reviewComment.size() >= 3)
+          || (incoming().isComplete == false && incoming().reviewStatus == 'OBSERVADA' && incoming().reviewComment.size() >= 3)
+        )
+        && incoming().versionNumber == 1
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+      allow update: if isValidId(candidatureId)
+        && isValidCandidature(incoming(), candidatureId)
+        && incoming().id == existing().id
+        && incoming().moduleType == existing().moduleType
+        && incoming().createdByUid == existing().createdByUid
+        && incoming().createdByName == existing().createdByName
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          // Action 1: Admin full override (including status corrections, fiscalización & authorizedUids sync)
+          (
+            isAdmin()
+            && incoming().diff(existing()).affectedKeys().hasOnly([
+              'title', 'movementName', 'listNumber', 'departamento', 'seccional',
+              'sublists', 'totalCandidates', 'requiredCandidates', 'isComplete',
+              'reviewStatus', 'reviewComment', 'reviewedByUid', 'versionNumber',
+              'fiscalizacion', 'authorizedUids', 'updatedAt'
+            ])
+          )
+          // Action 2: Operator with Modificación permission updating own PENDIENTE or OBSERVADA candidature
+          || (
+            isOperador()
+            && canModificacion()
+            && existing().createdByUid == request.auth.uid
+            && existing().reviewStatus in ['PENDIENTE', 'OBSERVADA']
+            && (
+              (incoming().isComplete == true && incoming().reviewStatus == 'PENDIENTE' && (incoming().reviewComment == '' || incoming().reviewComment == existing().reviewComment))
+              || (incoming().isComplete == true && incoming().reviewStatus == 'OBSERVADA' && incoming().reviewComment.size() >= 3)
+              || (incoming().isComplete == false && incoming().reviewStatus == 'OBSERVADA' && incoming().reviewComment.size() >= 3)
+            )
+            && incoming().reviewedByUid == existing().reviewedByUid
+            && incoming().versionNumber == existing().versionNumber + 1
+            && incoming().diff(existing()).affectedKeys().hasOnly([
+              'title', 'movementName', 'listNumber', 'departamento', 'seccional',
+              'sublists', 'totalCandidates', 'requiredCandidates', 'isComplete',
+              'reviewStatus', 'reviewComment', 'versionNumber', 'fiscalizacion', 'authorizedUids', 'updatedAt'
+            ])
+          )
+          // Action 3: Revisor with Modificación permission reviewing a non-locked candidature
+          || (
+            isRevisor()
+            && canModificacion()
+            && existing().reviewStatus != 'APROBADA'
+            && incoming().reviewStatus in ['PENDIENTE', 'APROBADA', 'OBSERVADA']
+            && incoming().reviewedByUid == request.auth.uid
+            && incoming().diff(existing()).affectedKeys().hasOnly([
+              'reviewStatus', 'reviewComment', 'reviewedByUid', 'fiscalizacion', 'updatedAt'
+            ])
+          )
+          // Action 4: Fiscalización checklist update by authorized staff
+          || (
+            isStaff()
+            && (canAlta() || canModificacion())
+            && (isAdmin() || isRevisor() || existing().createdByUid == request.auth.uid || request.auth.uid in existing().authorizedUids)
+            && incoming().title == existing().title
+            && incoming().sublists == existing().sublists
+            && incoming().reviewStatus == existing().reviewStatus
+            && incoming().versionNumber == existing().versionNumber
+            && incoming().diff(existing()).affectedKeys().hasOnly([
+              'fiscalizacion', 'updatedAt'
+            ])
+          )
+        );
+      allow delete: if isValidId(candidatureId) && canBaja();
+
+      // 6. Supporting Documents Subcollection (Master Gate checks parent candidature exists)
+      match /documents/{docId} {
+        allow get: if isValidId(candidatureId) && isValidId(docId) && isStaff();
+        allow list: if isValidId(candidatureId) && isVerifiedUser() && (
+          resource.data.uploadedByUid == request.auth.uid
+          || request.auth.uid in resource.data.authorizedUids
+          || isBootstrappedAdmin()
+        );
+        allow create: if isValidId(candidatureId) && isValidId(docId)
+          && (canAlta() || canModificacion())
+          && existsAfter(/databases/$(database)/documents/candidatures/$(candidatureId))
+          && (isAdmin() || isRevisor() || get(/databases/$(database)/documents/candidatures/$(candidatureId)).data.createdByUid == request.auth.uid)
+          && isValidCandidatureDocument(incoming(), candidatureId, docId)
+          && incoming().createdAt == request.time;
+        allow update: if false;
+        allow delete: if isValidId(candidatureId) && isValidId(docId)
+          && (canBaja() || (isOperador() && canModificacion() && get(/databases/$(database)/documents/candidatures/$(candidatureId)).data.createdByUid == request.auth.uid && get(/databases/$(database)/documents/candidatures/$(candidatureId)).data.reviewStatus != 'APROBADA'));
+      }
+    }
+
+    // 7. List Versions (Append-only historical snapshots)
+    match /list_versions/{versionId} {
+      allow get: if isValidId(versionId) && isStaff();
+      allow list: if isVerifiedUser() && (
+        resource.data.createdByUid == request.auth.uid
+        || request.auth.uid in resource.data.authorizedUids
+        || isBootstrappedAdmin()
+      );
+      allow create: if isValidId(versionId)
+        && (canAlta() || canModificacion())
+        && existsAfter(/databases/$(database)/documents/candidatures/$(incoming().candidatureId))
+        && isValidListVersion(incoming(), versionId)
+        && incoming().createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    // 8. Audit Logs (Append-only immutable trail)
+    match /audit_logs/{logId} {
+      allow get: if isValidId(logId) && isStaff();
+      allow list: if isVerifiedUser() && (
+        resource.data.actorUid == request.auth.uid
+        || request.auth.uid in resource.data.authorizedUids
+        || isBootstrappedAdmin()
+      );
+      allow create: if isValidId(logId)
+        && isStaff()
+        && isValidAuditLog(incoming(), logId)
+        && incoming().createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    // 9. Notifications (Target user or Admin)
+    match /notifications/{notifId} {
+      allow get: if isValidId(notifId) && isVerifiedUser() && (isAdmin() || (resource != null && existing().targetUid == request.auth.uid));
+      allow list: if isVerifiedUser() && (resource.data.targetUid == request.auth.uid || isBootstrappedAdmin());
+      allow create: if isValidId(notifId)
+        && isStaff()
+        && isValidNotification(incoming(), notifId)
+        && incoming().read == false
+        && incoming().createdAt == request.time;
+      allow update: if isValidId(notifId)
+        && isValidNotification(incoming(), notifId)
+        && (existing().targetUid == request.auth.uid || isAdmin())
+        && incoming().id == existing().id
+        && incoming().targetUid == existing().targetUid
+        && incoming().title == existing().title
+        && incoming().message == existing().message
+        && incoming().category == existing().category
+        && incoming().createdAt == existing().createdAt
+        && incoming().diff(existing()).affectedKeys().hasOnly(['read']);
+      allow delete: if isValidId(notifId) && isVerifiedUser() && (isAdmin() || (resource != null && existing().targetUid == request.auth.uid));
+    }
+
+    // 10. System Directory (Staff UIDs & Candidature IDs)
+    match /system_directory/{dirId} {
+      allow get: if isValidId(dirId) && isStaff();
+      allow list: if isBootstrappedAdmin();
+      allow create: if isValidId(dirId)
+        && isStaff()
+        && isValidSystemDirectory(incoming(), dirId)
+        && incoming().updatedAt == request.time;
+      allow update: if isValidId(dirId)
+        && isStaff()
+        && isValidSystemDirectory(incoming(), dirId)
+        && incoming().id == existing().id
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['staffUids', 'candidatureIds', 'invitationIds', 'updatedAt']);
+      allow delete: if false;
+    }
+  }
+}

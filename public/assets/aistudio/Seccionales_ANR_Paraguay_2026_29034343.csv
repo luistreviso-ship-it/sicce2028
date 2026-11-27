@@ -1,0 +1,390 @@
+Cód. Depto.;Departamento;Distrito;N.º Seccional;Denominación de la Seccional
+00;Capital;Asunción;1;Jaime Peña
+00;Capital;Asunción;2;Dr. Facundo Insfran
+00;Capital;Asunción;3;Dr. Angel Florentin Pena
+00;Capital;Asunción;4;Dr. Eduardo Lopez Moreira
+00;Capital;Asunción;5;Mayor Bonifacio Caballero
+00;Capital;Asunción;6;Fulgencio R. Moreno
+00;Capital;Asunción;7;Diego Berino
+00;Capital;Asunción;8;Rafael Meza
+00;Capital;Asunción;9;Dr. Antolin Irala
+00;Capital;Asunción;10;Dr. Gaspar Antoliano Garcete
+00;Capital;Asunción;11;Dr. Pedro P. Peña
+00;Capital;Asunción;12;Gral Bernardino Caballero
+00;Capital;Asunción;13;Bernardino Riquelme
+00;Capital;Asunción;14;Ricardo Brugada
+00;Capital;Asunción;15;Mayor Jose V. Gonzalez
+00;Capital;Asunción;16;Dr. Juan Manuel Frutos
+00;Capital;Asunción;17;Gral. Eugenio A. Garay
+00;Capital;Asunción;18;Cnel. Juan A. Escurra
+00;Capital;Asunción;19;Emilio V. Diaz de Vivar
+00;Capital;Asunción;20;Agustin Carmelo Candia
+00;Capital;Asunción;21;Dr. Antolin Sosa
+00;Capital;Asunción;22;Dr. Juan Leon Mallorquin
+00;Capital;Asunción;23;Eduardo Fleitas
+00;Capital;Asunción;24;Dr. Victor Boettner
+00;Capital;Asunción;25;Hipolito Sanchez
+00;Capital;Asunción;26;Seccional Colorada N.º 26 - Capital
+00;Capital;Asunción;27;Seccional Colorada N.º 27 - Capital
+00;Capital;Asunción;28;Seccional Colorada N.º 28 - Capital
+00;Capital;Asunción;29;Seccional Colorada N.º 29 - Capital
+00;Capital;Asunción;30;Seccional Colorada N.º 30 - Capital
+00;Capital;Asunción;31;Seccional Colorada N.º 31 - Capital
+00;Capital;Asunción;32;Seccional Colorada N.º 32 - Capital
+00;Capital;Asunción;33;Seccional Colorada N.º 33 - Capital
+00;Capital;Asunción;34;Seccional Colorada N.º 34 - Capital
+00;Capital;Asunción;35;Seccional Colorada N.º 35 - Capital
+00;Capital;Asunción;36;Seccional Colorada N.º 36 - Capital
+00;Capital;Asunción;37;Seccional Colorada N.º 37 - Capital
+00;Capital;Asunción;38;Seccional Colorada N.º 38 - Capital
+00;Capital;Asunción;39;Seccional Colorada N.º 39 - Capital
+00;Capital;Asunción;40;Seccional Colorada N.º 40 - Capital
+00;Capital;Asunción;41;Seccional Colorada N.º 41 - Capital
+00;Capital;Asunción;42;Seccional Colorada N.º 42 - Capital
+00;Capital;Asunción;43;Seccional Colorada N.º 43 - Capital
+00;Capital;Asunción;44;Ing. Don Luis Gonzaga Garay
+00;Capital;Asunción;45;Seccional Colorada N.º 45 - Capital
+01;Concepción;Arroyito;332;Arroyito
+01;Concepción;Azotey;333;Azotey
+01;Concepción;Belén;114;Belen
+01;Concepción;Concepción;127;Concepción
+01;Concepción;Concepción;330;Concepción 2
+01;Concepción;Horqueta;178;Horqueta
+01;Concepción;Loreto;198;Loreto
+01;Concepción;Paso Barreto;282;Paso Barreto
+01;Concepción;Paso Horqueta;468;Paso Horqueta
+01;Concepción;San Alfredo;211;Puerto Fonciere
+01;Concepción;San Alfredo;461;San Alfredo
+01;Concepción;San Carlos del Apa;293;San Carlos del Apa
+01;Concepción;San Lázaro;158;San Lazaro
+01;Concepción;San Lázaro;216;Vallemi
+01;Concepción;San Lázaro;389;Tres Cerros
+01;Concepción;Sgto. José Félix López;331;Sgto. Jose Felix Lopez
+01;Concepción;Yby Yaú;302;Yby-Yau
+02;San Pedro;25 de Diciembre;138;25 de Diciembre
+02;San Pedro;25 de Diciembre;377;Colonia Navidad
+02;San Pedro;Antequera;107;Antequera
+02;San Pedro;Capiibary;334;Capiibary
+02;San Pedro;Choré;296;Chore
+02;San Pedro;Gral. Elizardo Aquino;154;Gral. Elizardo Aquino
+02;San Pedro;Gral. Francisco Isidoro Resquín;300;Gral. Francisco I. Resquin
+02;San Pedro;Guayaibí;335;Guayaybi
+02;San Pedro;Guayaibí;378;Barrio San Pedro
+02;San Pedro;Itacurubí del Rosario;183;Itacurubi del Rosario
+02;San Pedro;Liberación;336;Joaijhu
+02;San Pedro;Liberación;443;Liberacion
+02;San Pedro;Lima;194;Lima
+02;San Pedro;Nueva Germania;157;Nueva Germania
+02;San Pedro;San Estanislao;244;San Estanislao
+02;San Pedro;San José del Rosario;470;San Jose del Rosario
+02;San Pedro;San Pablo;299;San Pablo ( Ex Cocuere )
+02;San Pedro;San Pedro de Ycuamandyyú;215;Puerto Ybapobo
+02;San Pedro;San Pedro de Ycuamandyyú;263;San Pedro de Ycuamandiyu
+02;San Pedro;San Vicente Pancholo;380;Colonia Pancholo
+02;San Pedro;Santa Rosa del Aguaray;383;Santa Rosa del Aguaray
+02;San Pedro;Tacuatí;248;Tacuati
+02;San Pedro;Unión;253;Union
+02;San Pedro;Villa del Rosario;264;Rosario
+02;San Pedro;Yataity del Norte;288;Yataity del Norte
+02;San Pedro;Yrybucuá;379;Col. Gral. Patricio Escobar
+03;Cordillera;Altos;108;Altos
+03;Cordillera;Arroyos y Esteros;109;Arroyos y Esteros
+03;Cordillera;Atyra;103;Atyra
+03;Cordillera;Caacupé;130;Caacupe
+03;Cordillera;Caraguatay;117;Caraguatay
+03;Cordillera;Emboscada;166;Emboscada
+03;Cordillera;Eusebio Ayala;113;Eusebio Ayala (b. Grande)
+03;Cordillera;Isla Pucú;184;Isla Pucu
+03;Cordillera;Itacurubí de la Cordillera;179;Itacurubi de la Cordillera
+03;Cordillera;Juan de Mena;193;Juan de Mena
+03;Cordillera;Loma Grande;281;Loma Grande
+03;Cordillera;Mbocayaty del Yhaguy;291;Mbocayaty del Yhaguy
+03;Cordillera;Nueva Colombia;151;Nueva Colombia
+03;Cordillera;Piribebuy;218;Piribebuy
+03;Cordillera;Primero de Marzo;146;Primero de Marzo
+03;Cordillera;San Bernardino;228;San Bernardino
+03;Cordillera;San José Obrero;312;San Jose Obrero
+03;Cordillera;Santa Elena;240;Santa Elena
+03;Cordillera;Tobatí;250;Tobati
+03;Cordillera;Valenzuela;255;Valenzuela
+04;Guairá;Borja;112;Borja
+04;Guairá;Capitán Mauricio José Troche;161;Cptan. Mauricio Jose Troche
+04;Guairá;Coronel Martínez;126;Coronel Martinez
+04;Guairá;Dr. Bottrell;143;Dr. Botrell
+04;Guairá;Félix Pérez Cardozo;177;Felix Perez Cardozo
+04;Guairá;Gral. Eugenio A. Garay;136;Gral. Eugenio A. Garay
+04;Guairá;Independencia;156;Independencia
+04;Guairá;Itapé;189;Itape
+04;Guairá;Iturbe;185;Iturbe
+04;Guairá;José A. Fassardi;168;Jose A. Fassardi
+04;Guairá;Mbocayaty del Guairá;201;Mbocayaty ( Guairá )
+04;Guairá;Natalicio Talavera;137;Natalicio Talavera
+04;Guairá;Paso Yobái;374;Paso Yobai
+04;Guairá;San Salvador;241;San Salvador
+04;Guairá;Tebicuary;251;Tebicuary
+04;Guairá;Villarrica;254;Villarrica
+04;Guairá;Villarrica;337;Villarrica 2
+04;Guairá;Yataity del Guairá;270;Yataity
+04;Guairá;Ñumí;204;Ñumi
+05;Caaguazú;3 de Febrero;323;3 de Febrero
+05;Caaguazú;Caaguazú;125;Caaguazú
+05;Caaguazú;Caaguazú;340;Caaguazú 2
+05;Caaguazú;Caaguazú;341;Caaguazú 3
+05;Caaguazú;Carayaó;128;Carayao
+05;Caaguazú;Coronel Oviedo;123;Cnel. Florentin Oviedo
+05;Caaguazú;Coronel Oviedo;338;Cnel. Oviedo 2
+05;Caaguazú;Coronel Oviedo;339;Cnel. Oviedo 3
+05;Caaguazú;Dr. Cecilio Báez;142;Dr. Cecilio Baez
+05;Caaguazú;Dr. J. Eulogio Estigarribia;295;Dr. J. Eulogio Estigarribia
+05;Caaguazú;Dr. Juan Manuel Frutos;279;Dr. Juan Manuel Frutos
+05;Caaguazú;Jose Domingo Ocampos;314;Jose Domingo Ocampos
+05;Caaguazú;La Pastora;322;la Pastora
+05;Caaguazú;Mcal. Francisco Solano López;313;Mcal. Francisco Solano Lopez
+05;Caaguazú;Nueva Londres;297;Nueva Londres
+05;Caaguazú;Nueva Toledo;186;Nueva Toledo
+05;Caaguazú;R.I. 3 Corrales;298;R. I. 3 Corrales
+05;Caaguazú;Raúl Arsenio Oviedo;309;Raul Arsenio Oviedo
+05;Caaguazú;Repatriación;285;Repatriacion
+05;Caaguazú;San Joaquín;245;San Joaquin
+05;Caaguazú;San José de los Arroyos;226;San Jose de los Arroyos
+05;Caaguazú;Santa Rosa del Mbutuy;280;Dr. Juan R.chavez (s.r.mbutuy
+05;Caaguazú;Simón Bolívar;324;Simon Bolivar
+05;Caaguazú;Tembiapora;445;Asentamiento Tembiapora
+05;Caaguazú;Vaquería;375;Vaqueria
+05;Caaguazú;Yhú;271;Yhu
+06;Caazapá;3 de Mayo;423;3 de Mayo
+06;Caazapá;Abaí;102;Abai
+06;Caazapá;Buena Vista;115;Buena Vista
+06;Caazapá;Caazapá;120;Caazapá
+06;Caazapá;Dr. Moisés S. Bertoni;150;Dr. Moises S. Bertoni
+06;Caazapá;Fulgencio Yegros;266;Fulgencio Yegros
+06;Caazapá;Gral. Higinio Morínigo;149;Gral. Higinio Morinigo
+06;Caazapá;Maciel;200;Maciel
+06;Caazapá;San Juan Nepomuceno;239;San Juan Nepomuceno
+06;Caazapá;Tavaí;327;Tavai
+06;Caazapá;Yuty;267;Yuty
+07;Itapúa;Alto Verá;308;Alto Vera
+07;Itapúa;Bella Vista;276;Bella Vista ( Itapúa )
+07;Itapúa;Cambyretá;141;Cambyreta
+07;Itapúa;Capitán Meza;140;Capitan Meza
+07;Itapúa;Capitán Miranda;144;Capitan Miranda
+07;Itapúa;Carlos Antonio López;283;Carlos Antonio Lopez
+07;Itapúa;Carmen del Paraná;122;Carmen del Paraná
+07;Itapúa;Coronel Bogado;118;Coronel Bogado
+07;Itapúa;Edelira;301;Edelira
+07;Itapúa;Encarnación;165;Encarnacion
+07;Itapúa;Encarnación;342;Encarnacion 2
+07;Itapúa;Encarnación;343;Encarnacion 3
+07;Itapúa;Fram;152;Fram
+07;Itapúa;General Artigas;174;Gral. Artigas
+07;Itapúa;General Delgado;153;Gral. Delgado
+07;Itapúa;Hohenau;139;Hohenau
+07;Itapúa;Itapúa Poty;329;Itapúa Poty
+07;Itapúa;Jesús;191;Jesus
+07;Itapúa;Jose Leandro Oviedo;247;Jose Leandro Oviedo
+07;Itapúa;La Paz;307;la Paz
+07;Itapúa;Mayor Julio D. Otaño;147;Mayor Julio D. Otaño
+07;Itapúa;Natalio;294;Natalio
+07;Itapúa;Nueva Alborada;206;Nueva Alborada
+07;Itapúa;Obligado;148;Obligado
+07;Itapúa;Pirapó;305;Colonia Pirapo
+07;Itapúa;San Cosme y Damián;229;San Cosme y Damian
+07;Itapúa;San Juan del Paraná;230;San Juan del Paraná
+07;Itapúa;San Pedro del Paraná;238;San Pedro del Paraná
+07;Itapúa;San Rafael del Paraná;304;San Rafael del Paraná
+07;Itapúa;San Rafael del Paraná;410;Naranjito
+07;Itapúa;Tomás Romero Pereira;303;Tomas Romero Pereira
+07;Itapúa;Trinidad;192;Trinidad ( Itapúa )
+07;Itapúa;Yatytay;306;Yatytay
+08;Misiones;Ayolas;105;Ayolas
+08;Misiones;San Ignacio;243;San Ignacio
+08;Misiones;San Juan Bautista;231;San Juan Bautista
+08;Misiones;San Miguel;232;San Miguel
+08;Misiones;San Patricio;246;San Patricio
+08;Misiones;Santa María;233;Santa Maria
+08;Misiones;Santa Rosa;237;Santa Rosa
+08;Misiones;Santiago;234;Santiago
+08;Misiones;Villa Florida;257;Villa Florida
+08;Misiones;Yabebyry;274;Yabebyry
+09;Paraguarí;Acahay;104;Acahay
+09;Paraguarí;Caapucu;121;Caapucu
+09;Paraguarí;Carapegua;119;Carapegua
+09;Paraguarí;Escobar;167;Escobar
+09;Paraguarí;Gral. Bernardino Caballero;132;Gral. Bernardino Caballero
+09;Paraguarí;La Colmena;159;la Colmena
+09;Paraguarí;María Antonia;460;Maria Antonia
+09;Paraguarí;Mbuyapey;203;Mbuyapey
+09;Paraguarí;Paraguarí;223;Paraguari
+09;Paraguarí;Pirayú;220;Pirayu
+09;Paraguarí;Quiindy;224;Quiindy
+09;Paraguarí;Quyquyhó;225;Quyquyho
+09;Paraguarí;San Roque González de Santa Cruz;111;San Roque G. de Santacruz
+09;Paraguarí;Sapucai;242;Sapucai
+09;Paraguarí;Tebicuary-mí;252;Tebicuary - Mi
+09;Paraguarí;Yaguarón;275;Yaguaron
+09;Paraguarí;Ybycuí;273;Ybycui
+09;Paraguarí;Ybytymí;269;Ybytymi
+10;Alto Paraná;Ciudad del Este;287;Ciudad del Este
+10;Alto Paraná;Ciudad del Este;344;Ciudad del Este 2
+10;Alto Paraná;Ciudad del Este;345;Ciudad del Este 3
+10;Alto Paraná;Ciudad del Este;346;Ciudad del Este 4
+10;Alto Paraná;Ciudad del Este;347;Ciudad del Este 5
+10;Alto Paraná;Ciudad del Este;394;Ciudad del Este 6
+10;Alto Paraná;Ciudad del Este;395;Ciudad del Este 7
+10;Alto Paraná;Ciudad del Este;396;Ciudad del Este 8
+10;Alto Paraná;Ciudad del Este;397;Ciudad del Este 9
+10;Alto Paraná;Ciudad del Este;398;Ciudad del Este 10
+10;Alto Paraná;Ciudad del Este;399;Ciudad del Este 11
+10;Alto Paraná;Ciudad del Este;400;Ciudad del Este 12
+10;Alto Paraná;Ciudad del Este;401;Ciudad del Este 13
+10;Alto Paraná;Ciudad del Este;402;Ciudad del Este 14
+10;Alto Paraná;Ciudad del Este;403;Ciudad del Este 15
+10;Alto Paraná;Ciudad del Este;451;Ciudad del Este 16
+10;Alto Paraná;Domingo Martínez de Irala;212;Domingo Martinez de Irala
+10;Alto Paraná;Dr. Juan León Mallorquín;278;Dr. Juan Leon Mallorquin
+10;Alto Paraná;Dr. Raúl Peña;405;Dr. Raul Peña
+10;Alto Paraná;Hernandarias;175;Hernandarias
+10;Alto Paraná;Hernandarias;452;Hernandarias 2
+10;Alto Paraná;Iruña;348;Iruña
+10;Alto Paraná;Itakyry;187;Itakyry
+10;Alto Paraná;Itakyry;391;Itaipyte
+10;Alto Paraná;Juan E. O'Leary;284;Juan E. O'leary
+10;Alto Paraná;Los Cedrales;317;los Cedrales
+10;Alto Paraná;Mbaracayú;325;Mbaracayu
+10;Alto Paraná;Minga Guazú;277;Minga Guazu
+10;Alto Paraná;Minga Porã;320;Minga Pora
+10;Alto Paraná;Naranjal;319;Naranjal
+10;Alto Paraná;Presidente Franco;214;Presidente Franco
+10;Alto Paraná;Presidente Franco;390;Presidente Franco 2
+10;Alto Paraná;San Alberto;321;San Alberto
+10;Alto Paraná;San Cristóbal;311;San Cristobal
+10;Alto Paraná;Santa Fe del Paraná;409;Santa Fe del Paraná
+10;Alto Paraná;Santa Rita;318;Santa Rita
+10;Alto Paraná;Santa Rosa del Monday;315;Santa Rosa del Monday
+10;Alto Paraná;Tavapy;326;Tavapy
+10;Alto Paraná;Yguazú;292;Yguazu
+10;Alto Paraná;Ñacunday;207;Ñacunday
+11;Central;Areguá;101;Areguá
+11;Central;Areguá;433;Valle Pucu
+11;Central;Areguá;434;Caacupe Mi
+11;Central;Capiatá;133;Capiatá
+11;Central;Capiatá;353;Capiatá 2
+11;Central;Capiatá;354;Capiatá 3
+11;Central;Fernando de la Mora;169;Fernando de la Mora
+11;Central;Fernando de la Mora;355;Fernando de la Mora 2
+11;Central;Fernando de la Mora;356;Fernando de la Mora 3
+11;Central;Fernando de la Mora;357;Fdo. de la Mora 4
+11;Central;Guarambaré;172;Guarambare
+11;Central;Itauguá;188;Itaugua
+11;Central;Itauguá;359;Itaugua 2
+11;Central;Itauguá;408;Itaugua 3
+11;Central;Itá;181;Don Pastor C. Filartiga
+11;Central;Itá;358;Ita 2
+11;Central;J. Augusto Saldívar;310;J. Augusto Saldivar
+11;Central;Lambaré;349;Lambare
+11;Central;Lambaré;350;Lambare 2
+11;Central;Lambaré;351;Lambare 3
+11;Central;Lambaré;352;Lambare 4
+11;Central;Lambaré;385;Lambare 5
+11;Central;Limpio;196;Limpio
+11;Central;Limpio;363;Limpio 2
+11;Central;Limpio;425;Piquete Cue - Limpio
+11;Central;Limpio;426;Villa Madrid - Limpio
+11;Central;Limpio;427;Rincon del Peñon - Limpio
+11;Central;Luque;195;Luque 2
+11;Central;Luque;360;Luque - Seccional 1
+11;Central;Luque;361;Luque - Seccional 3
+11;Central;Luque;362;Luque - Seccional 4
+11;Central;Mariano Roque Alonso;202;Mariano Roque Alonso
+11;Central;Mariano Roque Alonso;364;Mariano Roque Alonso Secc. 2
+11;Central;Mariano Roque Alonso;365;Mariano Roque Alonso 3
+11;Central;Mariano Roque Alonso;366;Mariano Roque Alonso 4
+11;Central;Mariano Roque Alonso;453;Mariano Roque Alonso 5
+11;Central;Nueva Italia;145;Nueva Italia
+11;Central;San Antonio;235;San Antonio
+11;Central;San Antonio;463;San Antonio 2
+11;Central;San Lorenzo;227;San Lorenzo
+11;Central;San Lorenzo;368;San Lorenzo 2
+11;Central;San Lorenzo;369;San Lorenzo 3
+11;Central;San Lorenzo;370;San Lorenzo 4
+11;Central;Villa Elisa;259;Villa Elisa
+11;Central;Villa Elisa;371;Villa Elisa 2
+11;Central;Villa Elisa;465;Villa Elisa 3
+11;Central;Villeta;262;Villeta
+11;Central;Ypacaraí;265;Ypacarai
+11;Central;Ypané;268;Ypané
+11;Central;Ñemby;205;Ñemby
+11;Central;Ñemby;367;Ñemby Nro.. 2
+11;Central;Ñemby;428;Pai Ñu - Ñemby 3
+11;Central;Ñemby;466;Ñemby 4
+12;Ñeembucú;Alberdi;106;Alberdi
+12;Ñeembucú;Cerrito;131;Cerrito
+12;Ñeembucú;Desmochados;164;Desmochados
+12;Ñeembucú;Gral. José Eduvigis Díaz;171;Gral. Jose E. Diaz
+12;Ñeembucú;Guazú Cuá;173;Guazu Cua
+12;Ñeembucú;Humaitá;176;Humaita
+12;Ñeembucú;Isla Umbú;190;Isla Umbu
+12;Ñeembucú;Laureles;197;Laureles
+12;Ñeembucú;Mayor José D. Martínez;222;Mayor Jose D. Martinez
+12;Ñeembucú;Paso de Patria;221;Paso de Patria
+12;Ñeembucú;Pilar;219;Pilar
+12;Ñeembucú;San Juan Bautista del Ñeembucú;236;San Juan Bautista (ñeembucu )
+12;Ñeembucú;Tacuaras;249;Tacuaras
+12;Ñeembucú;Villa Franca;256;Villa Franca
+12;Ñeembucú;Villa Oliva;260;Villa Oliva
+12;Ñeembucú;Villalbín;289;Villalbin
+13;Amambay;Bella Vista;110;Bella Vista
+13;Amambay;Capitán Bado;129;Capitan Bado
+13;Amambay;Cerro Corá;388;Chiriguelo
+13;Amambay;Karapaí;429;Karapai
+13;Amambay;Pedro Juan Caballero;217;Pedro Juan Caballero
+13;Amambay;Pedro Juan Caballero;386;San Gerardo
+13;Amambay;Zanja Pytã;387;Zanja Pyta
+14;Canindeyú;Corpus Christi;290;Corpus Christi
+14;Canindeyú;Curuguaty;124;Villa Curuguaty
+14;Canindeyú;Francisco Caballero Alvarez;316;Francisco Caballero Alvarez
+14;Canindeyú;Itanará;182;Itanara
+14;Canindeyú;Katueté;373;Katuete
+14;Canindeyú;La Paloma del Espíritu Santo;372;la Paloma
+14;Canindeyú;Laurel;467;Laurel
+14;Canindeyú;Maracaná;440;Maracana
+14;Canindeyú;Nueva Esperanza;393;Nueva Esperanza
+14;Canindeyú;Puerto Adela;462;Puerto Adela
+14;Canindeyú;Salto del Guairá;286;Salto del Guairá
+14;Canindeyú;Villa Ygatimí;261;Villa Ygatimi
+14;Canindeyú;Yasy Cañy;376;Yasy Kañy
+14;Canindeyú;Yby Pytã;424;Yby Pyta
+14;Canindeyú;Ybyrarobaná;328;Ybyrarovana
+14;Canindeyú;Ypejhú;272;Ypejhu
+15;Presidente Hayes;Benjamín Aceval;160;Benjamin Aceval
+15;Presidente Hayes;Benjamín Aceval;392;Benjamin Aceval 2
+15;Presidente Hayes;Benjamín Aceval;432;Compañia de Cerrito
+15;Presidente Hayes;Campo Aceval;469;Campo Aceval
+15;Presidente Hayes;Gral. José María Bruguez;155;Gral. Bruguez
+15;Presidente Hayes;Gral. José María Bruguez;442;Cadete Pando
+15;Presidente Hayes;José Falcón;134;Col. Jose Falcon
+15;Presidente Hayes;Nanawa;162;Gaspar Rodriguez de Francia
+15;Presidente Hayes;Nanawa;163;Nanawa ( Ex Puerto Elsa )
+15;Presidente Hayes;Nueva Asunción;135;Chaco - I
+15;Presidente Hayes;Puerto Pinasco;213;Pinasco
+15;Presidente Hayes;Puerto Pinasco;381;Ceibo
+15;Presidente Hayes;Tte. Esteban Martínez;444;Tte. Esteban Martinez
+15;Presidente Hayes;Tte. Primero Manuel Irala Fernández;446;Tte. Manuel Irala Fernández
+15;Presidente Hayes;Villa Hayes;258;Villa Hayes
+15;Presidente Hayes;Villa Hayes;382;Remansito
+15;Presidente Hayes;Villa Hayes;430;Barrio Alonso
+15;Presidente Hayes;Villa Hayes;431;Barrio Golondrina
+15;Presidente Hayes;Villa Hayes;454;Pozo Colorado
+16;Alto Paraguay;Bahía Negra;116;Bahia Negra
+16;Alto Paraguay;Carmelo Peralta;180;Col. C. Peralta (i. Margarita
+16;Alto Paraguay;Carmelo Peralta;209;Pto. la Esperanza
+16;Alto Paraguay;Fuerte Olimpo;170;Fuerte Olimpo
+16;Alto Paraguay;Fuerte Olimpo;210;Pto. Guarani
+16;Alto Paraguay;Puerto Casado;208;la Victoria ( Pto. Casado )
+17;Boquerón;Boquerón;384;Villa Choferes del Chaco
+17;Boquerón;Boquerón;441;Gral. Diaz (boqueron)
+17;Boquerón;Boquerón;450;Neuland
+17;Boquerón;Filadelfia;447;Filadelfia
+17;Boquerón;Loma Plata;448;Loma Plata
+17;Boquerón;Loma Plata;449;Yalve Sanga
+17;Boquerón;Mariscal Estigarribia;199;Mcal. Estigarribia
